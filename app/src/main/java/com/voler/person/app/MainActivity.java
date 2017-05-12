@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -13,14 +15,24 @@ public class MainActivity extends AppCompatActivity {
 
     // Example of a call to a native method
     TextView tv =   (TextView) findViewById(R.id.sample_text);
-    tv.setText(stringFromJNI());
+//    tv.setText(stringFromJNI());
+
+        try {
+            new FUtil().find(nb.class);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
+//    public native String stringFromJNI();
 
     // Used to load the 'native-lib' library on application startup.
     static {
