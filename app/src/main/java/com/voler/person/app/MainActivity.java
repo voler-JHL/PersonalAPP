@@ -4,9 +4,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.lang.reflect.InvocationTargetException;
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
 
+import java.lang.reflect.InvocationTargetException;
+@Route(path = "/main/activity")
 public class MainActivity extends AppCompatActivity {
+
+    @Autowired
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
