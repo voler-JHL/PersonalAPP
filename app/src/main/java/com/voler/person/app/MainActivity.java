@@ -1,26 +1,29 @@
 package com.voler.person.app;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.facade.annotation.Autowired;
-import com.alibaba.android.arouter.facade.annotation.Route;
+import com.voler.annotation.FieldInject;
 
 import java.lang.reflect.InvocationTargetException;
-@Route(path = "/main/activity")
+
 public class MainActivity extends AppCompatActivity {
 
-    @Autowired
+    @FieldInject
     String name;
+    @FieldInject
+    String age;
+    @FieldInject
+    String getName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-    // Example of a call to a native method
-    TextView tv =   (TextView) findViewById(R.id.sample_text);
+        // Example of a call to a native method
+        TextView tv = (TextView) findViewById(R.id.sample_text);
 //    tv.setText(stringFromJNI());
 
         try {

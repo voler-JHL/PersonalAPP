@@ -1,1 +1,1 @@
-include ':app', ':h-compiler'
+include ':app', ':omnipotence-compiler', ':omnipotence-annotation'
