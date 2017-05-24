@@ -7,6 +7,9 @@ import android.widget.TextView;
 import com.voler.annotation.FieldInject;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +29,20 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.sample_text);
 //    tv.setText(stringFromJNI());
 
-        PriInterface pri = new ProxyHandle().create(PriImpl.class);
-        pri.pri();
+        long l=1495603459000l;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zz");
+        String dateString = formatter.format(l);
+        tv.setText(dateString);
 
+        TimeZone tz = TimeZone.getDefault();
+        String s = "TimeZone   "+tz.getDisplayName(false, TimeZone.SHORT)+" Timezon id :: " +tz.getID();
+        System.out.println(s);
+        System.out.println(tz.getDisplayName());
+        System.out.println(tz.getDisplayName(false,TimeZone.LONG));
+        System.out.println(tz.getDisplayName(true,TimeZone.LONG));
+        System.out.println(tz.getDisplayName(true,TimeZone.SHORT));
+        System.out.println(tz.getDisplayName(Locale.CHINA));
+        System.out.println(tz.getDisplayName(Locale.ENGLISH));
         try {
             new FUtil().find(nb.class);
         } catch (IllegalAccessException e) {
