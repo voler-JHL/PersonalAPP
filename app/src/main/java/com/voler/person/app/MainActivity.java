@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.sample_text);
 //    tv.setText(stringFromJNI());
 
+        PriInterface pri = new ProxyHandle().create(PriImpl.class);
+        pri.pri();
+
         try {
             new FUtil().find(nb.class);
         } catch (IllegalAccessException e) {
