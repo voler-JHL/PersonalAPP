@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.voler.person.app.shortcut.ShortUtil;
+
 /**
  * VideoActivity Created by voler on 2017/5/25.
  * 说明：
@@ -23,6 +25,6 @@ public class VideoActivity extends Activity {
 //        videoView.setVideoURI(Uri.parse("http://flashmedia.eastday.com/newdate/news/2016-11/shznews1125-19.mp4"));
         videoView.setVideoURI(Uri.parse("http://src.mysada.com/test/test.mp4"));
         videoView.start();
-
+        ShortUtil.addShortcut(this);
     }
 }

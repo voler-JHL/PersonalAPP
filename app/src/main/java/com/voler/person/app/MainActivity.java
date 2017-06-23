@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.voler.annotation.FieldInject;
 import com.voler.person.app.lock.LockService;
-import com.voler.person.app.shortcut.ShortUtil;
 import com.voler.person.http.Api;
 
 import java.io.IOException;
@@ -18,6 +17,8 @@ import java.text.SimpleDateFormat;
 import okhttp3.ResponseBody;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+
+import static com.voler.person.app.shortcut.ShortUtil.toggleFlowEntrance;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zz");
         String dateString = formatter.format(l);
         tv.setText(dateString);
-
-//     startActivity(new Intent(this,WebActivity.class));
+     startActivity(new Intent(this,WebActivity.class));
         startService(new Intent(this, LockService.class));
-        ShortUtil.addShortcut(this);
+        toggleFlowEntrance(this,SplashActivityAlias.class);
 
+//        Toast.makeText(this,getString(),Toast.LENGTH_LONG).show();
         Api.getComApi()
                 .getSplashAdv()
                 .subscribeOn(Schedulers.io())
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         try {
-            new FUtil().find(nb.class);
+            new FUtil().find(Pri.class);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+        finish();
     }
 
     /**

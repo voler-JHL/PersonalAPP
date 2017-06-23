@@ -1,4 +1,6 @@
 apply plugin: 'java'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -6,3 +8,44 @@ dependencies {
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
+
+def packageName = 'com.voler'
+def libraryVersion = '1.0.0'
+
+
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId packageName
+            version = libraryVersion
+            artifactId project.getName()
+
+            // Tell maven to prepare the generated "* .aar" file for publishing
+            artifact("$buildDir/libs/${project.getName()}.jar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'http://119.2.19.101:8088/artifactory'
+    publish {
+        repository {
+            // The Artifactory repository key to publish to
+            repoKey = 'anawin'
+
+            username = "admin"
+            password = "password"
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+            publishArtifacts = true
+
+            // Properties to be attached to the published artifacts.
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
+    }
+}

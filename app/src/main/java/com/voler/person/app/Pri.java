@@ -1,11 +1,11 @@
 package com.voler.person.app;
 
 /**
- * nb Created by voler on 2017/5/12.
+ * Pri Created by voler on 2017/5/12.
  * 说明：
  */
 
-public class nb {
+public class Pri {
     public void pri(){
         System.out.println("--------");
     }
