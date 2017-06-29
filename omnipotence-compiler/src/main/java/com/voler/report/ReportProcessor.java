@@ -107,7 +107,7 @@ public class ReportProcessor extends AbstractProcessor {
                             .addStatement(String.format("params.putString(\"%s\",%s)", parameter, parameter));
                 }
             }
-            reportMethod.addStatement(String.format("$T.putEntry(%s,params)", methodName), ClassName.get("com.onemena.utils", "TongJiUtil"));
+            reportMethod.addStatement(String.format("$T.putEntry(\"%s\",params)", methodName), ClassName.get("com.onemena.utils", "TongJiUtil"));
             reportUtil.addMethod(reportMethod.build());
         }
         JavaFile.builder("com.onemena.util", reportUtil.build()).build().writeTo(filer);

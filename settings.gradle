@@ -1,1 +1,1 @@
-include ':app', ':omnipotence-compiler', ':omnipotence-annotation'
+include ':app', ':omnipotence-compiler', ':omnipotence-annotation', ':omnipotence-api'

@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/omnipotence-annotation" />
+            <option value="$PROJECT_DIR$/omnipotence-api" />
             <option value="$PROJECT_DIR$/omnipotence-compiler" />
           </set>
         </option>
