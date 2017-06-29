@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="294dp"
+    android:minHeight="294dp"
+    android:updatePeriodMillis="50000"
+    android:initialLayout="@layout/item_widget"
+    android:previewImage="@mipmap/ic_launcher_">
+
+</PreferenceScreen>

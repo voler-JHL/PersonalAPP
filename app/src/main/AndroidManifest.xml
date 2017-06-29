@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.voler.person.app" >
+    package="com.voler.person.app">
+
+    <!--用于访问网络，网络定位需要上网-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name="com.voler.person.app.MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name="com.voler.person.app.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="sensor"></activity>
+        <activity android:name=".WebActivity" />
+        <activity android:name=".lock.MyLockScreenActivity" />
+
+        <activity-alias
+            android:name="com.voler.person.app.SplashActivityAlias"
+            android:icon="@mipmap/ic_launcher_"
+            android:label="快速入口"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </activity-alias>
+
+        <service android:name=".lock.LockService" />
+        <service
+            android:name=".widget.MyService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name=".widget.MyWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" >
+                </action>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/small_widget" />
+        </receiver>
     </application>
 
 </manifest>
