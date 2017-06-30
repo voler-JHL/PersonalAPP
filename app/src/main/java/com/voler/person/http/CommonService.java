@@ -23,4 +23,7 @@ public interface CommonService {
 
     @GET("ar_AE/api/article_status/{article_id}")
     Observable<JsonObject> getstatus(@Path("article_id") String article_id);
+
+    @GET("ar_AE/api/article_status/{article_id}")
+    Observable<JsonObject> getstatu(@Path("article_id") String[] article_id);
 }
