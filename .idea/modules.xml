@@ -4,9 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PersonalAPP.iml" filepath="$PROJECT_DIR$/PersonalAPP.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/omnipotence-annotation/omnipotence-annotation.iml" filepath="$PROJECT_DIR$/omnipotence-annotation/omnipotence-annotation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/omnipotence-api/omnipotence-api.iml" filepath="$PROJECT_DIR$/omnipotence-api/omnipotence-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/omnipotence-compiler/omnipotence-compiler.iml" filepath="$PROJECT_DIR$/omnipotence-compiler/omnipotence-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/saber-annotation/saber-annotation.iml" filepath="$PROJECT_DIR$/saber-annotation/saber-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/saber-compiler/saber-compiler.iml" filepath="$PROJECT_DIR$/saber-compiler/saber-compiler.iml" />
     </modules>
   </component>
 </project>
