@@ -47,11 +47,11 @@ public class LockService extends Service {
             String action = intent.getAction();
             Log.e("-----","get");
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
+            } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.e(TAG, "screen off");
                 Intent LockIntent = new Intent(LockService.this, MyLockScreenActivity.class);
                 LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(LockIntent);
-            } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-                Log.e(TAG, "screen off");
             }
         }
     };

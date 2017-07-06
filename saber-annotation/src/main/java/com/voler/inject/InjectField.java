@@ -1,4 +1,4 @@
-package com.voler;
+package com.voler.inject;
 
 /**
  * InjectField Created by voler on 2017/6/30.

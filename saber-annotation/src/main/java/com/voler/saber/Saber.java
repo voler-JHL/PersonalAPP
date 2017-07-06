@@ -1,6 +1,6 @@
 package com.voler.saber;
 
-import com.voler.InjectField;
+import com.voler.inject.InjectField;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

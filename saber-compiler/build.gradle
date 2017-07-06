@@ -4,7 +4,7 @@ apply plugin: 'maven-publish'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.voler:saber-annotation:1.1.0'
+    compile 'com.voler:saber-annotation:1.1.1'
     compile 'com.google.auto.service:auto-service:1.0-rc3'
     compile 'com.squareup:javapoet:1.7.0'
 
@@ -17,7 +17,7 @@ compileJava {
     targetCompatibility = '1.7'
 }
 def packageName = 'com.voler'
-def libraryVersion = '1.1.0'
+def libraryVersion = '1.1.1'
 
 
 

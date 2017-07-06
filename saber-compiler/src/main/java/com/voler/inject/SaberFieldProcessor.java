@@ -4,7 +4,6 @@ import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.voler.annotation.FieldInject;
@@ -38,7 +37,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.voler.utils.Consts.ANNOTATION_TYPE_INJECTFIELD;
+import static com.voler.utils.Consts.ANNOTATION_TYPE_FIELDINJECT;
+import static com.voler.utils.Consts.ARRAYLIST;
+import static com.voler.utils.Consts.INTEGER;
 import static com.voler.utils.Consts.PARCELABLE;
 import static com.voler.utils.Consts.SERIALIZABLE;
 import static com.voler.utils.Consts.STRING;
@@ -46,9 +47,9 @@ import static com.voler.utils.Consts.WARNING_TIPS;
 
 
 @AutoService(Processor.class)
-@SupportedAnnotationTypes(ANNOTATION_TYPE_INJECTFIELD)
+@SupportedAnnotationTypes(ANNOTATION_TYPE_FIELDINJECT)
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-public class FieldProcessor extends AbstractProcessor {
+public class SaberFieldProcessor extends AbstractProcessor {
 
 
     private Elements elementUtils;
@@ -105,7 +106,7 @@ public class FieldProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotataions = new LinkedHashSet<String>();
-//        annotataions.add(FieldInject.class.getCanonicalName());
+        annotataions.add(FieldInject.class.getCanonicalName());
         return annotataions;
     }
 
@@ -153,14 +154,14 @@ public class FieldProcessor extends AbstractProcessor {
         TypeMirror fragmentTm = elementUtils.getTypeElement(Consts.FRAGMENT).asType();
         TypeMirror fragmentTmV4 = elementUtils.getTypeElement(Consts.FRAGMENT_V4).asType();
 
+        TypeSpec.Builder fragmentFactorySpec = TypeSpec.classBuilder("FragmentFactory")
+                .addJavadoc(WARNING_TIPS)
+                .addModifiers(Modifier.PUBLIC);
+
+
         //inject参数
-        ParameterSpec parameterSpec = ParameterSpec.builder(TypeName.OBJECT, "target").build();
         if (MapUtils.isNotEmpty(parentAndChild)) {
             for (Map.Entry<TypeElement, List<Element>> entry : parentAndChild.entrySet()) {
-                MethodSpec.Builder method = MethodSpec.methodBuilder("inject")
-                        .addAnnotation(Override.class)
-                        .addModifiers(Modifier.PUBLIC)
-                        .addParameter(TypeName.OBJECT, "target");
 
                 TypeElement classElement = entry.getKey();
                 List<Element> fieldList = entry.getValue();
@@ -170,68 +171,141 @@ public class FieldProcessor extends AbstractProcessor {
 
                 logger.info(">>> Start process " + fieldList.size() + " field in " + classElement.getSimpleName() + " ... <<<");
 
+
                 TypeSpec.Builder typeSpec = TypeSpec.classBuilder(fileName)
                         .addJavadoc(WARNING_TIPS)
                         .addModifiers(Modifier.PUBLIC)
                         .addSuperinterface(ClassName.get(InjectField.class));
 
-                method.addStatement("$T substitute = ($T)target", ClassName.get(classElement), ClassName.get(classElement));
+                MethodSpec.Builder method = MethodSpec.methodBuilder("inject")
+                        .addAnnotation(Override.class)
+                        .addModifiers(Modifier.PUBLIC)
+                        .addParameter(TypeName.OBJECT, "target")
+                        .addStatement("$T substitute = ($T)target", ClassName.get(classElement), ClassName.get(classElement));
                 boolean isActivity = false;
                 if (typeUtils.isSubtype(classElement.asType(), activityTm)) {
                     isActivity = true;
-                    method.addStatement("$T injects = substitute.getIntent()",ClassName.get("android.content", "Intent"));
+                    method.addStatement("$T injects = substitute.getIntent()", ClassName.get("android.content", "Intent"));
                 } else if (typeUtils.isSubtype(classElement.asType(), fragmentTm) || typeUtils.isSubtype(classElement.asType(), fragmentTmV4)) {
-                    method.addStatement("$T injects = substitute.getArguments()",ClassName.get("android.os", "Bundle"));
+                    method.addStatement("$T injects = substitute.getArguments()", ClassName.get("android.os", "Bundle"));
                 } else {
                     throw new IllegalAccessException(fileName + "is not activity or fragment! !");
                 }
+
                 for (Element element : fieldList) {
                     FieldInject fieldInject = element.getAnnotation(FieldInject.class);
                     String fieldName = element.getSimpleName().toString();
-                    String statment = "substitute." + fieldName + " = injects.";
 
-
+                    String statment = "substitute." + fieldName + " = injects.get";
                     statment = buildStatement(statment, element, isActivity);
-                    method.addStatement(statment, StringUtils.isEmpty(fieldInject.value()) ? fieldName : fieldInject.value());
+                    String parameter = StringUtils.isEmpty(fieldInject.value()) ? fieldName : fieldInject.value();
+                    method.addStatement(statment, String.format("\"%s\"", parameter));
                 }
                 typeSpec.addMethod(method.build());
-
                 JavaFile.builder(packageName, typeSpec.build()).build().writeTo(filer);
+
+
+                if (!isActivity) {
+                    MethodSpec.Builder createFragmentMethod = MethodSpec.methodBuilder("create" + classElement.getSimpleName())
+                            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                            .returns(ClassName.get(classElement))
+                            .addStatement("$T params = new $T()", ClassName.get("android.os", "Bundle"), ClassName.get("android.os", "Bundle"))
+                            .addStatement("$T fragment = new $T()", ClassName.get(classElement), ClassName.get(classElement));
+
+                    for (Element element : fieldList) {
+                        FieldInject fieldInject = element.getAnnotation(FieldInject.class);
+                        String fieldName = element.getSimpleName().toString();
+
+                        String statment = "params.put";
+                        statment = buildStatement(statment, element, isActivity);
+                        String parameter = StringUtils.isEmpty(fieldInject.value()) ? fieldName : fieldInject.value();
+                        TypeName typeName = ClassName.get(element.asType());
+                        createFragmentMethod.addParameter(typeName, parameter)
+                                .addStatement(statment, String.format("\"%s\",%s", parameter, parameter));
+//                                .addStatement(String.format("\"%s\",%s", parameter, parameter));
+                    }
+
+                    createFragmentMethod.addStatement("fragment.setArguments(params)")
+                            .addStatement("return fragment");
+                    fragmentFactorySpec.addMethod(createFragmentMethod.build());
+                }
             }
+            JavaFile.builder("com.voler.saber", fragmentFactorySpec.build()).build().writeTo(filer);
             logger.info(">>> FieldInject processor stop. <<<");
         }
     }
 
-    private String buildStatement(String statment, Element element, boolean isActivity) {
+    private String buildStatement(String statment, Element element, boolean isActivity) throws IllegalAccessException {
         TypeMirror typeMirror = element.asType();
         TypeKind type = typeMirror.getKind();
+        logger.info(typeMirror.toString() + "---" + type.ordinal());
 
         TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
         TypeMirror serializableType = elementUtils.getTypeElement(SERIALIZABLE).asType();
         TypeMirror stringType = elementUtils.getTypeElement(STRING).asType();
 
         if (type == TypeKind.BOOLEAN) {
-            statment += (isActivity ? ("getBooleanExtra($S, false)") : ("getBoolean($S)"));
+            statment += (isActivity ? ("BooleanExtra($L, false)") : ("Boolean($L)"));
         } else if (type == TypeKind.BYTE) {
-            statment += (isActivity ? ("getByteExtra($S, (byte) 0)") : ("getByte($S)"));
+            statment += (isActivity ? ("ByteExtra($L, (byte) 0)") : ("Byte($L)"));
         } else if (type == TypeKind.SHORT) {
-            statment += (isActivity ? ("getShortExtra($S, (short) 0)") : ("getShort($S)"));
+            statment += (isActivity ? ("ShortExtra($L, (short) 0)") : ("Short($L)"));
         } else if (type == TypeKind.INT) {
-            statment += (isActivity ? ("getIntExtra($S, 0)") : ("getInt($S)"));
+            statment += (isActivity ? ("IntExtra($L, 0)") : ("Int($L)"));
         } else if (type == TypeKind.LONG) {
-            statment += (isActivity ? ("getLongExtra($S, 0)") : ("getLong($S)"));
+            statment += (isActivity ? ("LongExtra($L, 0)") : ("Long($L)"));
         } else if (type == TypeKind.FLOAT) {
-            statment += (isActivity ? ("getFloatExtra($S, 0)") : ("getFloat($S)"));
+            statment += (isActivity ? ("FloatExtra($L, 0)") : ("Float($L)"));
         } else if (type == TypeKind.DOUBLE) {
-            statment += (isActivity ? ("getDoubleExtra($S, 0)") : ("getDouble($S)"));
+            statment += (isActivity ? ("DoubleExtra($L, 0)") : ("Double($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("boolean[]")) {
+            statment += (isActivity ? ("BooleanArrayExtra($L)") : ("BooleanArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("byte[]")) {
+            statment += (isActivity ? ("ByteArrayExtra($L)") : ("ByteArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("short[]")) {
+            statment += (isActivity ? ("ShortArrayExtra($L)") : ("ShortArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("int[]")) {
+            statment += (isActivity ? ("IntArrayExtra($L)") : ("IntArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("long[]")) {
+            statment += (isActivity ? ("LongArrayExtra($L)") : ("LongArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("float[]")) {
+            statment += (isActivity ? ("tFloatArrayExtra($L)") : ("FloatArray($L)"));
+        } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("double[]")) {
+            statment += (isActivity ? ("DoubleArrayExtra($L)") : ("DoubleArray($L)"));
+        } else if (typeMirror.toString().equals(STRING + "[]")) {
+            statment += (isActivity ? ("StringArrayExtra($L)") : ("StringArray($L)"));
         } else if (typeUtils.isSameType(typeMirror, stringType)) {
-            statment += (isActivity ? ("getStringExtra($S)") : ("getString($S)"));
+            statment += (isActivity ? ("StringExtra($L)") : ("String($L)"));
         } else if (typeUtils.isSubtype(typeMirror, parcelableType)) {
-            statment += (isActivity ? ("getParcelableExtra($S)") : ("getParcelable($S)"));
+            statment += (isActivity ? ("ParcelableExtra($L)") : ("Parcelable($L)"));
+        } else if (isList(typeMirror)) {
+            String string = typeMirror.toString();
+            logger.info(string);
+            string = string.substring(string.indexOf("<") + 1, string.lastIndexOf(">"));
+            logger.info(string);
+            TypeMirror asType = elementUtils.getTypeElement(string).asType();
+            if (string.equals(INTEGER)) {
+                statment += (isActivity ? ("IntegerArrayListExtra($L)") : ("IntegerArrayList($L)"));
+            } else if (string.equals(STRING)) {
+                statment += (isActivity ? ("StringArrayListExtra($L)") : ("StringArrayList($L)"));
+            } else if (typeUtils.isSubtype(asType, parcelableType)) {
+                statment += (isActivity ? ("ParcelableArrayListExtra($L)") : ("ParcelableArrayList($L)"));
+            } else {
+                statment += (isActivity ? ("CharSequenceArrayListExtra($L)") : ("CharSequenceArrayList($L)"));
+            }
         } else if (typeUtils.isSubtype(typeMirror, serializableType)) {
-            statment += (isActivity ? ("getSerializableExtra($S)") : ("getSerializable($S)"));
+            statment += (isActivity ? ("SerializableExtra($L)") : ("Serializable($L)"));
+        }else {
+            throw new IllegalAccessException(typeMirror.toString()+"--> This type is not supported");
         }
 
         return statment;
+    }
+
+    boolean isList(TypeMirror typeMirror) {
+        String string = typeMirror.toString();
+        logger.info(string);
+        string = string.substring(0, string.indexOf("<"));
+        return string.equals(ARRAYLIST);
     }
 }

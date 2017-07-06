@@ -30,6 +30,8 @@ public class Consts {
     public static final String DOUBEL = LANG + ".Double";
     public static final String BOOLEAN = LANG + ".Boolean";
     public static final String STRING = LANG + ".String";
+    public static final String LIST = "java.util.List";
+    public static final String ARRAYLIST = "java.util.ArrayList";
 
     // package
     private static final String PACKAGE = "com.voler";
@@ -42,4 +44,5 @@ public class Consts {
     public static final String ANNOTATION_TYPE_REPORTEVENT = PACKAGE + ".annotation.ReportEvent";
     public static final String ANNOTATION_TYPE_REPORTPARAMETER = PACKAGE + ".annotation.ReportParameter";
     public static final String ANNOTATION_TYPE_FIELDINJECT = PACKAGE + ".annotation.FieldInject";
+    public static final String ANNOTATION_TYPE_INJECTFIELD = PACKAGE + ".annotation.InjectField";
 }

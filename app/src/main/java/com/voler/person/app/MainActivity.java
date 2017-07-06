@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.voler.annotation.FieldInject;
+import com.voler.person.app.lock.LockService;
 import com.voler.person.http.Api;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import okhttp3.ResponseBody;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("stringname","hanjinglu");
         intent.putExtra("stringNum",465415646);
         startActivity(intent);
-//        startService(new Intent(this, LockService.class));
+        startService(new Intent(this, LockService.class));
 //        toggleFlowEntrance(this,SplashActivityAlias.class);
 
 //        Toast.makeText(this,getString(),Toast.LENGTH_LONG).show();
+
+
         Api.getComApi()
                 .getSplashAdv()
                 .subscribeOn(Schedulers.io())
