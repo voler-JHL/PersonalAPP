@@ -1,12 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_lock_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/icon_set" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="31dp"
+            android:src="@drawable/icon_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="34dp"
+            android:layout_toLeftOf="@id/iv_logo"
+            android:text="واصل"
+            android:textColor="#fff"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <TextClock
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="right"
+        android:paddingRight="16dp"
+        android:textColor="#fff"
+        android:textSize="38dp" />
+
 
     <TextView
+        android:id="@+id/tv_data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="40dp"
-        android:text="锁屏页"/>
+        android:layout_height="20dp"
+        android:gravity="right"
+        android:paddingRight="16dp"
+        android:shadowDy="1"
+        android:textColor="#fff"
+        android:textSize="14dp" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_news"
+        android:layout_width="match_parent"
+        android:layout_height="366dp">
+
+    </android.support.v4.view.ViewPager>
+
+
 </LinearLayout>
