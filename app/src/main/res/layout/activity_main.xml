@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.voler.person.app.MainActivity">
 
     <TextView
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="50dp"
         android:text="Hello World!" />
+
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/img_follow_bg_n"/>
-</RelativeLayout>
+        android:src="@drawable/img_follow_bg_n"
+        android:visibility="gone" />
+
+    <com.voler.person.app.widget.RoundLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="200dp">
+
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:src="@color/colorAccent"-->
+            <!--android:layout_alignParentBottom="true"-->
+             <!--/>-->
+    </com.voler.person.app.widget.RoundLayout>
+
+    <com.voler.person.app.widget.RatingBarView
+        android:id="@+id/rb_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:starCount="5"
+        app:starImageSize="20dp"
+        app:starEmpty="@drawable/icon_star"
+        app:starFill="@drawable/icon_graystar"
+        />
+
+
+    <RatingBar
+        style="?android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:numStars="7"
+        android:stepSize="1.5"
+        android:isIndicator="true"
+        android:rating="3"/>
+</LinearLayout>

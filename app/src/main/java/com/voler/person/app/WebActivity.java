@@ -109,6 +109,9 @@ public class WebActivity extends Activity {
             }
         });
 
+
+        webview.loadUrl("http://www.dailymotion.com/embed/video/k3rZJPFKVbFE7anW5Kr?autoPlay=1");
+
     }
 
     private void insert() {

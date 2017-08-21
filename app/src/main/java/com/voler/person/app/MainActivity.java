@@ -9,15 +9,16 @@ import android.widget.Toast;
 
 import com.voler.annotation.FieldInject;
 import com.voler.person.app.lock.LockService;
+import com.voler.person.app.widget.RatingBarView;
 import com.voler.person.http.Api;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import okhttp3.ResponseBody;
-import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,17 +40,31 @@ public class MainActivity extends AppCompatActivity {
 //    tv.setText(stringFromJNI());
 
         long l = 1495603459000l;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zz");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz");
         String dateString = formatter.format(l);
-        tv.setText(dateString);
-        Intent intent = new Intent(this, WebActivity.class);
-        intent.putExtra("stringname","hanjinglu");
-        intent.putExtra("stringNum",465415646);
-        startActivity(intent);
+        TimeZone aDefault = TimeZone.getDefault();
+        tv.setText(null);
+        Log.e("-----", aDefault.getDisplayName(false, TimeZone.SHORT) + aDefault.getDisplayName(false, TimeZone.LONG) + aDefault.getID());
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("stringname", "hanjinglu");
+        intent.putExtra("stringNum", 465415646);
+//        startActivity(intent);
         startService(new Intent(this, LockService.class));
 //        toggleFlowEntrance(this,SplashActivityAlias.class);
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+        Toast.makeText(this,today+"",Toast.LENGTH_SHORT).show();
 
-//        Toast.makeText(this,getString(),Toast.LENGTH_LONG).show();
+        //
+        RatingBarView viewById = (RatingBarView) findViewById(R.id.rb_view);
+//        viewById.setStar(3,false);
+
+        viewById.setOnRatingListener(new RatingBarView.OnRatingListener() {
+            @Override
+            public void onRating(Object bindObject, int RatingScore) {
+                Toast.makeText(MainActivity.this, String.valueOf(RatingScore), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         Api.getComApi()
@@ -81,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 //        } catch (InvocationTargetException e) {
 //            e.printStackTrace();
 //        }
-        finish();
+//        finish();
     }
 
     /**

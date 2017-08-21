@@ -1,0 +1,111 @@
+package com.voler.person.app.lock;
+
+import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+
+import com.voler.person.app.R;
+
+/**
+ * BaseSlideFinishActivity Created by voler on 2017/7/18.
+ * 说明：
+ */
+
+public class BaseSlideFinishActivity extends AppCompatActivity
+        implements SlideFinishRelativeLayout.IOnSlideToFinish, SlideFinishRelativeLayout.IOnSlideFinishChangeListener {
+    private SlideFinishRelativeLayout mSlideFinishRelativeLayout;
+    private boolean mIsOpenSlideFinish;
+    private SlideFinishRelativeLayout.SlideMode mSlideMode;
+    private ViewGroup mSlideView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        init();
+    }
+
+    private void init() {
+        mIsOpenSlideFinish = true;
+        mSlideMode = SlideFinishRelativeLayout.SlideMode.ALL;
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        if (mIsOpenSlideFinish) {
+            View viewRoot = LayoutInflater.from(this).inflate(R.layout.activity_base, null);
+            mSlideFinishRelativeLayout =
+                    (SlideFinishRelativeLayout) viewRoot.findViewById(R.id.layout_root);
+            mSlideFinishRelativeLayout.setOnSlideToFinishListener(this);
+            mSlideFinishRelativeLayout.setSlideMode(mSlideMode);
+            mSlideFinishRelativeLayout.setSlideEnable(mIsOpenSlideFinish);
+            mSlideFinishRelativeLayout.setOnSlideFinishChangeListener(this);
+            mSlideFinishRelativeLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSlideView = mSlideFinishRelativeLayout.getSlideView();
+                    mSlideView.setPivotX(mSlideView.getWidth() / 2);
+                    mSlideView.setPivotY(mSlideView.getHeight());
+                }
+            });
+            ViewStub viewStub = (ViewStub) viewRoot.findViewById(R.id.layout_content);
+            viewStub.setLayoutResource(layoutResID);
+            viewStub.inflate();
+            super.setContentView(viewRoot);
+        } else {
+            super.setContentView(layoutResID);
+        }
+    }
+
+    /**
+     * 设置滑动模式
+     */
+
+    protected void setSlideMode(SlideFinishRelativeLayout.SlideMode slideMode) {
+        if (slideMode != null) {
+            mSlideMode = slideMode;
+            if (mSlideFinishRelativeLayout != null) {
+                mSlideFinishRelativeLayout.setSlideMode(slideMode);
+            }
+        }
+    }
+
+    /**
+     * 是否使能滑动finish
+     */
+    protected void enableSlideFinish(boolean isOpenSlideFinish) {
+        mIsOpenSlideFinish = isOpenSlideFinish;
+        if (mSlideFinishRelativeLayout != null) {
+            mSlideFinishRelativeLayout.setSlideEnable(isOpenSlideFinish);
+        }
+    }
+
+    protected ViewGroup getSlideView() {
+        return mSlideView;
+    }
+
+    protected void setOnSlideFinishChangeListener(SlideFinishRelativeLayout.IOnSlideFinishChangeListener onSlideFinishChangeListener) {
+        mSlideFinishRelativeLayout.setOnSlideFinishChangeListener(onSlideFinishChangeListener);
+    }
+
+    @Override
+    public void onFinish() {
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mSlideFinishRelativeLayout != null && mIsOpenSlideFinish) {
+            mSlideFinishRelativeLayout.scrollToFinishImmediately();
+        }
+    }
+
+    @Override
+    public void onSlideFinishChange(View slideView, float slidePercent) {
+        slideView.setRotation(30 * slidePercent);
+    }
+}

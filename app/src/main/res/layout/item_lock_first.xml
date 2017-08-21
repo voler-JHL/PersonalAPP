@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_firstpage"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_open_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62dp"
+        android:background="#33f"
+        android:paddingBottom="9dp"
+        android:paddingLeft="27dp"
+        android:paddingRight="27dp"
+        android:paddingTop="9dp"
+        android:text="افتح تطبيق"
+        android:textColor="#fff"
+        android:elevation="8dip"
+        android:textSize="18dp" />
+
+</RelativeLayout>

@@ -8,4 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="mystyle" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/ll</item>
+    </style>
+
+    <declare-styleable name="RatingBarView">
+
+        <attr name="starImageSize" format="dimension"/>
+        <attr name="starCount" format="integer"/>
+        <attr name="starEmpty" format="reference"/>
+        <attr name="starFill" format="reference"/>
+
+    </declare-styleable>
+
 </resources>

@@ -25,6 +25,14 @@ android {
                 cppFlags ""
             }
         }
+
+        ndk {
+
+            //APP的build.gradle设置支持的SO库架构
+
+            abiFilters 'armeabi', 'armeabi-v7a'
+        }
+
     }
     buildTypes {
         release {
@@ -78,4 +86,6 @@ dependencies {
     compile rootProject.ext.dependencies["retrofit-adapter-rxjava"]
     compile rootProject.ext.dependencies["timber"]
     compile 'com.github.lzyzsd:jsbridge:1.0.4'
+    //完整版引入
+//    compile 'com.shuyu:GSYVideoPlayer:2.0.2'
 }

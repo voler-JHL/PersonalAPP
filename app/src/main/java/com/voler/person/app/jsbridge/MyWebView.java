@@ -59,13 +59,13 @@ public class MyWebView extends WebView {
 //        loadUrl("http://3.dev.arabsada.com");
 //        loadUrl("javascript:omApp.login=function(callback){window.loginCallback=callback; omApp.login1(5);}");
 //        loadUrl("javascript:omApp.login(function(success){omApp.login1(success)})");
-        loadUrl("javascript:omApp.haha.login2(ssss)");
+        loadUrl("javascript:omApp.login(ssss)");
     }
 
 
     class JSObj {
         @JavascriptInterface
-        public void login1(String string) {
+        public void login(String string,Callback callback) {
             Log.i("login","login");
 //            o.onReceiveValue(false);
             Log.i("login", String.valueOf(string));
@@ -79,6 +79,9 @@ public class MyWebView extends WebView {
                 }
             });
 //            loadUrl("javascript:window.loginCallback(1)");
+
+
+            callback.zhixing("",-1);
         }
 
         @JavascriptInterface
@@ -88,5 +91,11 @@ public class MyWebView extends WebView {
         }
 
 
+    }
+
+    class  Callback {
+        public void zhixing(String data,int flag){
+            loadUrl("javascript:omApp.login(ssss)");
+        }
     }
 }
