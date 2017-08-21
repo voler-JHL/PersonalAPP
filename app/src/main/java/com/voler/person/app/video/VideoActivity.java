@@ -1,4 +1,4 @@
-package com.voler.person.app;
+package com.voler.person.app.video;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.voler.person.app.R;
 import com.voler.person.app.shortcut.ShortUtil;
 
 /**

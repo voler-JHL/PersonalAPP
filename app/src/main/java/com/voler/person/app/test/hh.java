@@ -1,5 +1,7 @@
 package com.voler.person.app.test;
 
+import com.voler.person.app.proxy.ProxyHandle;
+
 /**
  * hh Created by voler on 2017/5/19.
  * 说明：

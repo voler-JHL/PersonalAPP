@@ -1,13 +1,16 @@
-package com.voler.person.app;
+package com.voler.person.app.home;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.voler.annotation.FieldInject;
+import com.voler.person.app.R;
+import com.voler.person.app.bean.Person;
+import com.voler.person.app.bean.Student;
+import com.voler.person.app.inject.InjectActivity;
 import com.voler.person.app.lock.LockService;
 import com.voler.person.app.widget.RatingBarView;
 import com.voler.person.http.Api;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import rx.functions.Action1;
@@ -42,13 +46,18 @@ public class MainActivity extends AppCompatActivity {
         long l = 1495603459000l;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz");
         String dateString = formatter.format(l);
-        TimeZone aDefault = TimeZone.getDefault();
-        tv.setText(null);
-        Log.e("-----", aDefault.getDisplayName(false, TimeZone.SHORT) + aDefault.getDisplayName(false, TimeZone.LONG) + aDefault.getID());
-        Intent intent = new Intent(this, VideoActivity.class);
-        intent.putExtra("stringname", "hanjinglu");
-        intent.putExtra("stringNum", 465415646);
-//        startActivity(intent);
+        tv.setText(dateString);
+
+        Intent intent = new Intent(this, InjectActivity.class);
+        intent.putExtra("string","这是由MainActivity传来的字符串");
+        intent.putExtra("number",52054843);
+        intent.putExtra("chars",new char[]{'v','o','l','e','r',' ','m','e','a','n','s',' ','l','o','v','e','r'});
+        intent.putExtra("obj",new Person("Voler",false));
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student("Loof",69));
+        students.add(new Student("Fool",25));
+        intent.putParcelableArrayListExtra("studentList",students);
+        startActivity(intent);
         startService(new Intent(this, LockService.class));
 //        toggleFlowEntrance(this,SplashActivityAlias.class);
         Calendar calendar = Calendar.getInstance();

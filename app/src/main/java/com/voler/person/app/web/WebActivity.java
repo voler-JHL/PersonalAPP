@@ -1,4 +1,4 @@
-package com.voler.person.app;
+package com.voler.person.app.web;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -6,13 +6,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.provider.UserDictionary;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.voler.annotation.FieldInject;
+import com.voler.person.app.R;
 import com.voler.person.app.jsbridge.MyWebView;
 import com.voler.saber.Saber;
 
@@ -43,35 +42,9 @@ public class WebActivity extends Activity {
    protected ArrayList<String> fdda;
     @FieldInject
     int stringNum;
-    @FieldInject
-    HHHH vczxv;
+
     private String tag;
-   static class HHHH implements Parcelable{
 
-        protected HHHH(Parcel in) {
-        }
-
-        public static final Creator<HHHH> CREATOR = new Creator<HHHH>() {
-            @Override
-            public HHHH createFromParcel(Parcel in) {
-                return new HHHH(in);
-            }
-
-            @Override
-            public HHHH[] newArray(int size) {
-                return new HHHH[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

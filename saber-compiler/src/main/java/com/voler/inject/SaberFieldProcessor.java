@@ -158,6 +158,10 @@ public class SaberFieldProcessor extends AbstractProcessor {
                 .addJavadoc(WARNING_TIPS)
                 .addModifiers(Modifier.PUBLIC);
 
+        TypeSpec.Builder intentFactorySpec = TypeSpec.classBuilder("IntentFactory")
+                .addJavadoc(WARNING_TIPS)
+                .addModifiers(Modifier.PUBLIC);
+
 
         //inject参数
         if (MapUtils.isNotEmpty(parentAndChild)) {
@@ -205,7 +209,29 @@ public class SaberFieldProcessor extends AbstractProcessor {
                 JavaFile.builder(packageName, typeSpec.build()).build().writeTo(filer);
 
 
-                if (!isActivity) {
+
+                if (isActivity){
+                    MethodSpec.Builder createIntentMethod = MethodSpec.methodBuilder("create" + classElement.getSimpleName())
+                            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                            .returns(ClassName.get("android.content", "Intent"))
+                            .addStatement("$T intent = new $T()", ClassName.get("android.content", "Intent"), ClassName.get("android.content", "Intent"));
+
+                    for (Element element : fieldList) {
+                        FieldInject fieldInject = element.getAnnotation(FieldInject.class);
+                        String fieldName = element.getSimpleName().toString();
+
+                        String statment = "intent.put";
+                        statment = buildIntentStatement(statment, element);
+                        String parameter = StringUtils.isEmpty(fieldInject.value()) ? fieldName : fieldInject.value();
+                        TypeName typeName = ClassName.get(element.asType());
+                        createIntentMethod.addParameter(typeName, parameter)
+                                .addStatement(statment, parameter, parameter);
+//                                .addStatement(String.format("\"%s\",%s", parameter, parameter));
+                    }
+                    createIntentMethod.addStatement("return intent");
+                    intentFactorySpec.addMethod(createIntentMethod.build());
+
+                }else {
                     MethodSpec.Builder createFragmentMethod = MethodSpec.methodBuilder("create" + classElement.getSimpleName())
                             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                             .returns(ClassName.get(classElement))
@@ -231,8 +257,33 @@ public class SaberFieldProcessor extends AbstractProcessor {
                 }
             }
             JavaFile.builder("com.voler.saber", fragmentFactorySpec.build()).build().writeTo(filer);
+            JavaFile.builder("com.voler.saber", intentFactorySpec.build()).build().writeTo(filer);
             logger.info(">>> FieldInject processor stop. <<<");
         }
+    }
+
+    private String buildIntentStatement(String statment, Element element) {
+        TypeMirror typeMirror = element.asType();
+        TypeMirror parcelableType = elementUtils.getTypeElement(PARCELABLE).asType();
+        if (isList(typeMirror)) {
+            String string = typeMirror.toString();
+            logger.info(string);
+            string = string.substring(string.indexOf("<") + 1, string.lastIndexOf(">"));
+            logger.info(string);
+            TypeMirror asType = elementUtils.getTypeElement(string).asType();
+            if (string.equals(INTEGER)) {
+                statment +=  "IntegerArrayListExtra($S,$L)";
+            } else if (string.equals(STRING)) {
+                statment +=  "StringArrayListExtra($S,$L)";
+            } else if (typeUtils.isSubtype(asType, parcelableType)) {
+                statment += "ParcelableArrayListExtra($S,$L)";
+            } else {
+                statment += "CharSequenceArrayListExtra($S,$L)";
+            }
+        }else {
+            statment +=  "Extra($S,$L)";
+        }
+        return statment;
     }
 
     private String buildStatement(String statment, Element element, boolean isActivity) throws IllegalAccessException {
@@ -258,6 +309,8 @@ public class SaberFieldProcessor extends AbstractProcessor {
             statment += (isActivity ? ("FloatExtra($L, 0)") : ("Float($L)"));
         } else if (type == TypeKind.DOUBLE) {
             statment += (isActivity ? ("DoubleExtra($L, 0)") : ("Double($L)"));
+        }else if (type == TypeKind.CHAR) {
+            statment += (isActivity ? ("CharExtra($L, 0)") : ("Char($L)"));
         } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("boolean[]")) {
             statment += (isActivity ? ("BooleanArrayExtra($L)") : ("BooleanArray($L)"));
         } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("byte[]")) {
@@ -272,6 +325,8 @@ public class SaberFieldProcessor extends AbstractProcessor {
             statment += (isActivity ? ("tFloatArrayExtra($L)") : ("FloatArray($L)"));
         } else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("double[]")) {
             statment += (isActivity ? ("DoubleArrayExtra($L)") : ("DoubleArray($L)"));
+        }  else if (StringUtils.deleteWhitespace(typeMirror.toString()).equals("char[]")) {
+            statment += (isActivity ? ("CharArrayExtra($L)") : ("CharArray($L)"));
         } else if (typeMirror.toString().equals(STRING + "[]")) {
             statment += (isActivity ? ("StringArrayExtra($L)") : ("StringArray($L)"));
         } else if (typeUtils.isSameType(typeMirror, stringType)) {
@@ -305,7 +360,8 @@ public class SaberFieldProcessor extends AbstractProcessor {
     boolean isList(TypeMirror typeMirror) {
         String string = typeMirror.toString();
         logger.info(string);
-        string = string.substring(0, string.indexOf("<"));
-        return string.equals(ARRAYLIST);
+
+//        string = string.substring(0, string.indexOf("<"));
+        return  string.startsWith(ARRAYLIST);
     }
 }

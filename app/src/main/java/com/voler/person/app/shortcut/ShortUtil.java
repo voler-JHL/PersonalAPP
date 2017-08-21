@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
-import com.voler.person.app.MainActivity;
+import com.voler.person.app.home.MainActivity;
 import com.voler.person.app.R;
 
 /**

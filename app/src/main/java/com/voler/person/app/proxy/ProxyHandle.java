@@ -1,4 +1,6 @@
-package com.voler.person.app.test;
+package com.voler.person.app.proxy;
+
+import com.voler.person.app.test.PriInterface;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
