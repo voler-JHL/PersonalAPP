@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.voler.annotation.FieldInject;
 import com.voler.person.app.R;
@@ -17,9 +18,8 @@ import com.voler.person.http.Api;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.ResponseBody;
 import rx.functions.Action1;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 //        toggleFlowEntrance(this,SplashActivityAlias.class);
         Calendar calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_YEAR);
-        Toast.makeText(this,today+"",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,today+"", Toast.LENGTH_SHORT).show();
 
         //
         RatingBarView viewById = (RatingBarView) findViewById(R.id.rb_view);
