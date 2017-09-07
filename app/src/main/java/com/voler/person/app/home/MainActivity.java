@@ -13,6 +13,7 @@ import com.voler.person.app.bean.Person;
 import com.voler.person.app.bean.Student;
 import com.voler.person.app.inject.InjectActivity;
 import com.voler.person.app.lock.LockService;
+import com.voler.person.app.widget.RTLProgressBar;
 import com.voler.person.app.widget.RatingBarView;
 import com.voler.person.http.Api;
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.sample_text);
+        RTLProgressBar rtlProgressBar = (RTLProgressBar) findViewById(R.id.pb);
 //    tv.setText(stringFromJNI());
 
         long l = 1495603459000l;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         students.add(new Student("Loof",69));
         students.add(new Student("Fool",25));
         intent.putParcelableArrayListExtra("studentList",students);
-        startActivity(intent);
+//        startActivity(intent);
         startService(new Intent(this, LockService.class));
 //        toggleFlowEntrance(this,SplashActivityAlias.class);
         Calendar calendar = Calendar.getInstance();
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        rtlProgressBar.setMax(300);
+        rtlProgressBar.toProgress(290);
 
         Api.getComApi()
                 .getSplashAdv()

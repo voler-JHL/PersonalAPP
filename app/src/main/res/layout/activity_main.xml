@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.voler.person.app.MainActivity">
+    tools:context="com.voler.person.app.home.MainActivity">
 
     <TextView
         android:id="@+id/sample_text"
@@ -64,4 +64,16 @@
         android:stepSize="1.5"
         android:isIndicator="true"
         android:rating="3"/>
+
+    <com.voler.person.app.widget.RTLProgressBar
+        android:id="@+id/pb"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dip"
+        android:padding="5dp"
+        app:progress_text_size="30dp"
+        app:progress_text_offset="19dp"
+        app:progress_text_color="#ffF53B03"
+        app:progress_background_color="#ffF7C6B7" />
+
 </LinearLayout>
